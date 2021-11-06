@@ -22,4 +22,8 @@
     <PackageReference Include="Caliburn.Micro" Version="4.0.173" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Husic.Engine\Husic.Engine.csproj" />
+  </ItemGroup>
+
 </Project>

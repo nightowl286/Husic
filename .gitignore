@@ -356,3 +356,6 @@ MigrationBackup/
 
 # secrets
 secrets/
+
+# Apparently missing from the Visual Studio template? showing up in VS as checked in.
+*.TMP

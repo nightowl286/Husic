@@ -15,7 +15,7 @@ namespace Husic.Engine.Playback
 
       #region Events
       event Action PlaybackFinished;
-      event Action PlaybackStarted;
+      event Action PlaybackLoaded;
       #endregion
 
       #region Methods
