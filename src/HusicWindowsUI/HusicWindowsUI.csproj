@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>Husic</AssemblyName>
+    <RootNamespace>Husic.Windows</RootNamespace>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>D:\Repos\Husic\secrets\strong_key.rsa</AssemblyOriginatorKeyFile>
+    <Authors>Nightowl</Authors>
+    <Company>TNO</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="icon.ico" />
+  </ItemGroup>
+
+</Project>
