@@ -1,4 +1,6 @@
 ﻿using Caliburn.Micro;
+using Husic.Engine.Playback;
+using Husic.Windows.Playback;
 using Husic.Windows.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -32,6 +34,7 @@ namespace Husic.Windows
          _Container.Singleton<IEventAggregator, EventAggregator>();
          _Container.Singleton<SimpleContainer>();
 
+         _Container.PerRequest<IPlayer, WindowsPlayer>();
          _Container.PerRequest<ShellViewModel>();
       }
       protected override void OnStartup(object sender, StartupEventArgs e)
