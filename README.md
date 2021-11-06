@@ -16,7 +16,7 @@ This will show what stages will be present in this project (this will change as 
 - RC (release candidate)
 
 ## Current goals
-- [ ] An MVP project created with .Net MAUI for basic playlists and playback, currently for Windows only.
+- [ ] An MVP project created with .Net MAUI/WPF for basic playlists and playback, currently for Windows only.
 
 
 ## Licensing
