@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="Husic" Height="425" Width="600">
     <Grid>
-        
+        <ContentControl x:Name="ActiveItem" />
     </Grid>
 </Window>

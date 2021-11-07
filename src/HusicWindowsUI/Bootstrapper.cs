@@ -30,12 +30,13 @@ namespace Husic.Windows
       {
          _Container = new SimpleContainer();
 
-         _Container.Singleton<IWindowManager, WindowManager>();
-         _Container.Singleton<IEventAggregator, EventAggregator>();
-         _Container.Singleton<SimpleContainer>();
+         _Container.Singleton<IWindowManager, WindowManager>()
+            .Singleton<IEventAggregator, EventAggregator>()
+            .Singleton<SimpleContainer>();
 
-         _Container.PerRequest<IPlayer, WindowsPlayer>();
-         _Container.PerRequest<ShellViewModel>();
+         _Container.PerRequest<IPlayer, WindowsPlayer>()
+            .PerRequest<ShellViewModel>()
+            .PerRequest<DashboardViewModel>();
       }
       protected override void OnStartup(object sender, StartupEventArgs e)
       {
