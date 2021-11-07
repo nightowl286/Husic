@@ -32,7 +32,8 @@ namespace Husic.Windows
 
          _Container.Singleton<IWindowManager, WindowManager>()
             .Singleton<IEventAggregator, EventAggregator>()
-            .Singleton<SimpleContainer>();
+            .Singleton<SimpleContainer>()
+            .Singleton<IHusicPlayer, HusicPlayer>();
 
          _Container.PerRequest<IPlayer, WindowsPlayer>()
             .PerRequest<ShellViewModel>()
