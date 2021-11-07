@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Husic.Engine.DataAccess;
 using Husic.Engine.Playback;
 using Husic.Windows.Playback;
 using Husic.Windows.ViewModels;
@@ -33,7 +34,8 @@ namespace Husic.Windows
          _Container.Singleton<IWindowManager, WindowManager>()
             .Singleton<IEventAggregator, EventAggregator>()
             .Singleton<SimpleContainer>()
-            .Singleton<IHusicPlayer, HusicPlayer>();
+            .Singleton<IHusicPlayer, HusicPlayer>()
+            .Singleton<IDataAccess, Engine.DataAccess.DataAccess>();
 
          _Container.PerRequest<IPlayer, WindowsPlayer>()
             .PerRequest<ShellViewModel>()
@@ -41,6 +43,9 @@ namespace Husic.Windows
       }
       protected override void OnStartup(object sender, StartupEventArgs e)
       {
+         IDataAccess data = _Container.GetInstance<IDataAccess>();
+         data.EnsureTables();
+
          DisplayRootViewFor<ShellViewModel>();
       }
       protected override IEnumerable<Assembly> SelectAssemblies() => new[] { Assembly.GetExecutingAssembly() };

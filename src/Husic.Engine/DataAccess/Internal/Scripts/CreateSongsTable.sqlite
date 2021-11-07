@@ -1,0 +1,6 @@
+﻿CREATE TABLE songs (
+	Id INTEGER PRIMARY KEY,
+	Name TEXT NOT NULL,
+	Duration INTEGER NOT NULL,
+	Source TEXT NOT NULL
+);

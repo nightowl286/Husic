@@ -15,5 +15,21 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Deterministic>False</Deterministic>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="DataAccess\Internal\Scripts\CreateSongsTable.sqlite" />
+    <None Remove="DataAccess\Internal\Scripts\Exists.sqlite" />
+    <None Remove="DataAccess\Internal\Scripts\QuerySongsTable.sqlite" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="DataAccess\Internal\Scripts\QuerySongsTable.sqlite" />
+    <EmbeddedResource Include="DataAccess\Internal\Scripts\CreateSongsTable.sqlite" />
+    <EmbeddedResource Include="DataAccess\Internal\Scripts\Exists.sqlite" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Husic.DataAccess\Husic.DataAccess.csproj" />
+  </ItemGroup>
 	
 </Project>

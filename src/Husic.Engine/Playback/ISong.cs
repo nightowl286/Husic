@@ -7,8 +7,9 @@ namespace Husic.Engine.Playback
    public interface ISong
    {
       #region Properties
+      int Id { get; }
       Uri Source { get; }
-      string Title { get; }
+      string Name { get; }
       TimeSpan Duration { get; }
       #endregion
    }
