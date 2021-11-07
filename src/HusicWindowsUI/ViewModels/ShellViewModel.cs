@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Husic.Engine.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Husic.Windows.ViewModels
       #region Private
       private readonly DashboardViewModel _Dashboard;
       #endregion
-      public ShellViewModel(DashboardViewModel dashboard)
+      public ShellViewModel(DashboardViewModel dashboard, IDataAccess da)
       {
          _Dashboard = dashboard;
 
