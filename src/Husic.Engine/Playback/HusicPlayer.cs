@@ -87,8 +87,15 @@ namespace Husic.Windows.Playback
       {
          if (IsPlaying)
          {
-            NotifyOfPropertyChange(() => Position);
-            NotifyOfPropertyChange(() => Duration);
+            try
+            {
+               NotifyOfPropertyChange(() => Position);
+               NotifyOfPropertyChange(() => Duration);
+            }
+            catch (TaskCanceledException) // in case of shutdown
+            {
+               _Timer.Stop();
+            }
          }
       }
       #endregion
