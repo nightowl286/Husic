@@ -26,16 +26,16 @@ namespace Husic.Windows.ViewModels
          }
       }
       // TODO(Nightowl) - Create a value converter for Timespan <-> String/Double
-      public double Duration
+      public TimeSpan Duration
       {
-         get => _Player.Duration.TotalSeconds;
+         get => _Player.Duration;
       }
-      public double Position
+      public TimeSpan Position
       {
-         get => _Player.Position.TotalSeconds;
+         get => _Player.Position;
          set
          {
-            _Player.Position = TimeSpan.FromSeconds(value);
+            _Player.Position = value;
             NotifyOfPropertyChange();
          }
       }
