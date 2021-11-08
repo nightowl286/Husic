@@ -1,10 +1,10 @@
-﻿using Husic.Engine.Playback;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Husic.Standard.Playback;
 
-namespace Husic.Engine.DataAccess
+namespace Husic.Standard.DataAccess
 {
    public interface IDataAccess
    {

@@ -7,8 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Internal\Scripts\CreateSongsTable.sqlite" />
+    <None Remove="Internal\Scripts\Exists.sqlite" />
+    <None Remove="Internal\Scripts\QuerySongsTable.sqlite" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Internal\Scripts\CreateSongsTable.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Exists.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\QuerySongsTable.sqlite" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Husic.Standard\Husic.Standard.csproj" />
   </ItemGroup>
 
 </Project>

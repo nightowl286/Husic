@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>D:\Repos\Husic\secrets\strong_key.rsa</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+</Project>

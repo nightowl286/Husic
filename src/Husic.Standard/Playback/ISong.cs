@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Husic.Engine.Playback
+namespace Husic.Standard.Playback
 {
    public interface ISong
    {

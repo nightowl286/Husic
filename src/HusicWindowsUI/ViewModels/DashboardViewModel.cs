@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro;
-using Husic.Engine.DataAccess;
-using Husic.Engine.Playback;
+using Husic.Standard.DataAccess;
+using Husic.Standard.Playback;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +46,7 @@ namespace Husic.Windows.ViewModels
          _Player = player;
          player.PropertyChanged += Player_PropertyChanged;
 
-         access.GetSongs().ContinueWith(songs => player.Play(songs.Result.First()));
+         access.GetSongs().ContinueWith(songs => App.Current.Dispatcher.Invoke(() => player.Play(songs.Result.First())));
          
       }
 

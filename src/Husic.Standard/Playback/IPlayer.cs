@@ -3,22 +3,24 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-namespace Husic.Engine.Playback
+namespace Husic.Standard.Playback
 {
-   public interface IHusicPlayer : INotifyPropertyChanged
+   public interface IPlayer
    {
       #region Properties
-      bool IsSongLoaded { get; }
-      bool IsPlaying { get; set; }
       double Volume { get; set; }
-      bool IsMuted { get; set; }
       TimeSpan Duration { get; }
       TimeSpan Position { get; set; }
-      ISong CurrentlyPlaying { get; }
+      #endregion
+
+      #region Events
+      event Action PlaybackFinished;
+      event Action PlaybackLoaded;
       #endregion
 
       #region Methods
-      void Play(ISong song);
+      void Load(Uri source);
+      void Stop();
       void Play();
       void Pause();
       #endregion
