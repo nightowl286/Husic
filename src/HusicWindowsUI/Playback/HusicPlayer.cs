@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace Husic.Windows.Playback
 {
@@ -12,6 +13,7 @@ namespace Husic.Windows.Playback
    {
       #region Private
       private readonly IPlayer _Player;
+      private readonly DispatcherTimer _Timer;
       #endregion
 
       #region Backings
@@ -30,11 +32,9 @@ namespace Husic.Windows.Playback
          set
          {
             if (IsPlaying && !value)
-               _Player.Pause();
+               Pause();
             else if (!IsPlaying && value && IsSongLoaded)
-               _Player.Play();
-
-            Set(ref _IsPlaying, value);
+               Play();
          }
       }
       public double Volume 
@@ -76,18 +76,56 @@ namespace Husic.Windows.Playback
       public HusicPlayer(IPlayer player)
       {
          _Player = player;
+         _Timer = new DispatcherTimer();
+         _Timer.Tick += Timer_Tick;
+         _Timer.Interval = TimeSpan.FromMilliseconds(50);
       }
 
+      #region Events
+      private void Timer_Tick(object? sender, EventArgs e)
+      {
+         if (IsPlaying)
+         {
+            NotifyOfPropertyChange(() => Position);
+            NotifyOfPropertyChange(() => Duration);
+         }
+      }
+      #endregion
+
       #region Methods
-      public void Pause() => IsPlaying = false;
+      public void Pause()
+      {
+         if (IsPlaying)
+         {
+            _Player.Pause();
+            _Timer.Stop();
+            NotifyOfPropertyChange(() => Position);
+            NotifyOfPropertyChange(() => Duration);
+            _IsPlaying = false;
+            NotifyOfPropertyChange(() => IsPlaying);
+         }
+      }
       public void Play(ISong song)
       {
-         _Player.Load(song.Source);
-         CurrentlyPlaying = song;
-         _Player.Position = TimeSpan.Zero;
-         _Player.Play();
+         App.Current.Dispatcher.Invoke(() =>
+         {
+            _Player.Load(song.Source);
+            CurrentlyPlaying = song;
+            Position = TimeSpan.Zero;
+            Play();
+            NotifyOfPropertyChange(() => Duration);
+         });
       }
-      public void Play() => IsPlaying = true;
+      public void Play()
+      {
+         if (!IsPlaying)
+         {
+            _Player.Play();
+            _Timer.Start();
+            _IsPlaying = true;
+            NotifyOfPropertyChange(() => IsPlaying);
+         }
+      }
       #endregion
    }
 }
