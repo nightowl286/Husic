@@ -1,12 +1,14 @@
 ﻿<Application x:Class="Husic.Windows.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-             xmlns:local="clr-namespace:Husic.Windows">
+             xmlns:local="clr-namespace:Husic.Windows"
+             xmlns:conv="clr-namespace:Husic.Windows.Converters">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <local:Bootstrapper x:Key="bootstrapper" />
+                    <conv:TimespanSecondsConverter x:Key="TimespanSecondsConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

@@ -29,7 +29,9 @@
             </Grid.RowDefinitions>
             <Slider x:Name="Volume" Minimum="0" Orientation="Vertical" Maximum="1" Grid.RowSpan="3" />
             <TextBlock Grid.Column="1" x:Name="SongName" />
-            <Slider Grid.Column="1" Grid.Row="1" Minimum="0" Value="{Binding Position}" Maximum="{Binding Duration}" />
+            <Slider Grid.Column="1" Grid.Row="1" Minimum="0" 
+                    Value="{Binding Position, Converter={StaticResource TimespanSecondsConverter}}" 
+                    Maximum="{Binding Duration, Converter={StaticResource TimespanSecondsConverter}}" />
         </Grid>
     </Grid>
 </UserControl>
