@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro;
-using Husic.Engine.DataAccess;
-using Husic.Engine.Playback;
+using Husic.Standard.DataAccess;
+using Husic.Standard.Playback;
 using Husic.Windows.Playback;
 using Husic.Windows.ViewModels;
 using System;
@@ -35,7 +35,7 @@ namespace Husic.Windows
             .Singleton<IEventAggregator, EventAggregator>()
             .Singleton<SimpleContainer>()
             .Singleton<IHusicPlayer, HusicPlayer>()
-            .Singleton<IDataAccess, Engine.DataAccess.DataAccess>();
+            .Singleton<IDataAccess, DataAccess.DataAccess>();
 
          _Container.PerRequest<IPlayer, WindowsPlayer>()
             .PerRequest<ShellViewModel>()

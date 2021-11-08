@@ -4,13 +4,13 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using Husic.DataAccess;
-using Husic.Engine.Playback;
-using Models = Husic.Engine.Models;
-using Internals = Husic.Engine.DataAccess.Internal.Models;
+using Husic.Standard.Playback;
+using Models = Husic.DataAccess.Models;
+using Internals = Husic.DataAccess.Internal.Models;
 using System.Linq;
+using Husic.Standard.DataAccess;
 
-namespace Husic.Engine.DataAccess
+namespace Husic.DataAccess
 {
    public class DataAccess : IDataAccess
    {
@@ -31,11 +31,10 @@ namespace Husic.Engine.DataAccess
       {
          static ISong Convert(Internals.SongModel model)
          {
-            return new Models.SongModel()
+            return new Models.SongModel(model.Id)
             {
                Duration = TimeSpan.FromSeconds(model.Duration),
                Name = model.Name,
-               Id = model.Id,
                Source = new Uri(model.Source)
             };
          }
@@ -96,7 +95,7 @@ namespace Husic.Engine.DataAccess
       }
       private static string GetName(string name)
       {
-         return _ContainingAssemblyName+ ".DataAccess.Internal.Scripts." + name + ".sqlite";
+         return _ContainingAssemblyName+ ".Internal.Scripts." + name + ".sqlite";
       }
       #endregion
    }

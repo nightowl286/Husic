@@ -1,9 +1,4 @@
-﻿using Husic.Engine.Playback;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Husic.Engine.DataAccess.Internal.Models
+﻿namespace Husic.DataAccess.Internal.Models
 {
    internal class SongModel
    {
