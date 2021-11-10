@@ -16,48 +16,38 @@ namespace Husic.Windows.ViewModels
       #endregion
 
       #region Properties
-      public double Volume
-      {
-         get => _Player.Volume;
-         set
-         {
-            _Player.Volume = value;
-            NotifyOfPropertyChange();
-         }
-      }
-      // TODO(Nightowl) - Create a value converter for Timespan <-> String/Double
-      public TimeSpan Duration
-      {
-         get => _Player.Duration;
-      }
-      public TimeSpan Position
-      {
-         get => _Player.Position;
-         set
-         {
-            _Player.Position = value;
-            NotifyOfPropertyChange();
-         }
-      }
-      public string? SongName => _Player.CurrentlyPlaying?.Name;
+      public IHusicPlayer Player => _Player;
       #endregion
       public DashboardViewModel(IHusicPlayer player, IDataAccess access)
       {
          _Player = player;
+
+         //player.Volume = 0.5;
+
          player.PropertyChanged += Player_PropertyChanged;
 
          access.GetSongs().ContinueWith(songs => App.Current.Dispatcher.Invoke(() => player.Play(songs.Result.First())));
-         
       }
 
       #region Events
       private void Player_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
       {
          string? prop = e.PropertyName;
-         if (prop == nameof(Volume) || prop == nameof(Duration) || prop == nameof(Position))
-            NotifyOfPropertyChange(prop);
-         else if (prop == nameof(_Player.CurrentlyPlaying))
-            NotifyOfPropertyChange(nameof(SongName));
+         if (prop == nameof(Player.IsSongLoaded))
+            NotifyOfPropertyChange(() => CanTogglePause);
+      }
+      #endregion
+
+      #region Control buttons
+      public bool CanPlayPrevious => false;
+      public bool CanPlayNext => false;
+      public bool CanTogglePause => Player.IsSongLoaded;
+      public void TogglePause()
+      {
+         if (Player.IsPlaying)
+            Player.Pause();
+         else
+            Player.Play();
       }
       #endregion
    }

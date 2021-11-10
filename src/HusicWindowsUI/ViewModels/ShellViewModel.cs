@@ -19,8 +19,6 @@ namespace Husic.Windows.ViewModels
          _Dashboard = dashboard;
 
          ActivateItemAsync(_Dashboard);
-
       }
-
    }
 }

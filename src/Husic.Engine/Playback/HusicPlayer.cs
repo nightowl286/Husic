@@ -80,6 +80,7 @@ namespace Husic.Windows.Playback
          _Timer.Elapsed += Timer_Elapsed;
          _Timer.Interval = 50;
          _Timer.AutoReset = true;
+         Volume = player.Volume;
       }
 
       #region Events
@@ -118,6 +119,7 @@ namespace Husic.Windows.Playback
          _Player.Load(song.Source);
          CurrentlyPlaying = song;
          Position = TimeSpan.Zero;
+         IsSongLoaded = true;
          Play();
          NotifyOfPropertyChange(() => Duration);
       }
