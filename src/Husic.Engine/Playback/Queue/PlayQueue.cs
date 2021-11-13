@@ -139,9 +139,73 @@ namespace Husic.Engine.Playback.Queue
          UpNextSection.Clear();
          RepeatingSection.Clear();
       }
+      public void Play(int playIndex)
+      {
+         if (playIndex < 0)
+         {
+            CurrentPlayIndex = playIndex;
+            ISectionEntry historyEntry = HistorySection.GetByPlayIndex(playIndex);
+            Debug.Assert(historyEntry != null);
+
+            CurrentSong = historyEntry.Song;
+         }
+         else
+         {
+            if (playIndex < PlayOnceSection.Entries.Count)
+            {
+               CurrentSong = PlayOnceSection.Entries[playIndex].Song;
+
+               for (int i = 0; i < playIndex; i++)
+               {
+                  ISectionEntry entry = PlayOnceSection.Entries[0];
+                  AddToHistory(entry.Song);
+                  PlayOnceSection.Entries.RemoveAt(0);
+               }
+
+               for (int i = 0; i < PlayOnceSection.Entries.Count; i++)
+               {
+                  ISectionEntry entry = PlayOnceSection.Entries[i];
+                  entry.Index = i;
+                  entry.PlayIndex = i;
+               }
+            }
+            else
+            {
+               int index = playIndex - PlayOnceSection.Entries.Count;
+               Debug.Assert(index < UpNextSection.Entries.Count);
+               CurrentSong = UpNextSection.Entries[index].Song;
+
+               int playOnceAmount = PlayOnceSection.Entries.Count;
+
+               foreach (ISectionEntry entry in PlayOnceSection.Entries)
+                  AddToHistory(entry.Song);
+
+               PlayOnceSection.Clear();
+
+               int relativePlayIndex = playIndex - playOnceAmount;
+               for(int i = 0; i < relativePlayIndex; i++)
+               {
+                  ISectionEntry entry = UpNextSection.Entries[0];
+                  AddToHistory(entry.Song);
+                  UpNextSection.Entries.RemoveAt(0);
+               }
+            }
+
+            int playOnceCount = PlayOnceSection.Entries.Count;
+            for (int i = 0; i < UpNextSection.Entries.Count; i++)
+            {
+               ISectionEntry entry = UpNextSection.Entries[i];
+               entry.Index = i;
+               entry.PlayIndex = i + playOnceCount;
+            }
+         }
+         GetNextSong();
+         GetPreviousSong();
+      }
       private void AddToHistory(ISong song)
       {
          ISectionEntry entry = MakeEntry(song);
+         entry.PlayIndex = -1;
          HistorySection.AddEntry(entry);
       }
       private void GetPreviousSong()
@@ -150,15 +214,16 @@ namespace Husic.Engine.Playback.Queue
       }
       private void GetNextSong()
       {
-         if (CurrentPlayIndex < -1)
-            NextSong = HistorySection.GetByPlayIndex(CurrentPlayIndex + 1).Song;
+         int nextIndex = CurrentPlayIndex + 1;
+         if (nextIndex < -1)
+            NextSong = HistorySection.GetByPlayIndex(nextIndex + 1).Song;
          else
          {
-            if (CurrentPlayIndex < PlayOnceSection.Entries.Count)
-               NextSong = PlayOnceSection.Entries[CurrentPlayIndex].Song;
+            if (nextIndex < PlayOnceSection.Entries.Count)
+               NextSong = PlayOnceSection.Entries[nextIndex].Song;
             else
             {
-               int index = CurrentPlayIndex - PlayOnceSection.Entries.Count;
+               int index = nextIndex - PlayOnceSection.Entries.Count;
                if (index < UpNextSection.Entries.Count)
                   NextSong = UpNextSection.Entries[index].Song;
                else
