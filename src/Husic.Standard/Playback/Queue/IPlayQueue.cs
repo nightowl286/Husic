@@ -41,6 +41,7 @@ namespace Husic.Standard.Playback.Queue
       void MoveBackwards();
       void MoveFowards();
       void Clear();
+      void Play(int playIndex);
       #endregion
    }
 }
