@@ -11,12 +11,14 @@ namespace Husic.Standard.Playback.Queue
       ISong PreviousSong { get; }
       ISong CurrentSong { get; }
       ISong NextSong { get; }
+      int CurrentPlayIndex { get; }
+      int MaxHistorySize { get; set; }
 
       /// <summary>
       /// Stores a list of maximum <c>n</c> songs that have been previously
       /// played, with the most recent ones at the beginning
       /// </summary>
-      IQueueSection HistorySection { get; }
+      IHistorySection HistorySection { get; }
 
       /// <summary>
       /// Stores a list of songs that will be played next but only once
@@ -38,6 +40,7 @@ namespace Husic.Standard.Playback.Queue
       #region Methods
       void MoveBackwards();
       void MoveFowards();
+      void Clear();
       #endregion
    }
 }
