@@ -59,12 +59,16 @@ namespace Husic.Engine.Playback.Queue
          UpdateIndex(UpNextSection.Entries, PlayOnceSection.Entries.Count);
          GetPreviousSong();
          GetNextSong();
+         if (CurrentSong == null)
+            GetStartingSong();
       }
       private void UpNext_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
       {
          UpdateIndex(UpNextSection.Entries, PlayOnceSection.Entries.Count);
          GetPreviousSong();
          GetNextSong();
+         if (CurrentSong == null)
+            GetStartingSong();
       }
       private void UpdateIndex<T>(ObservableCollection<T> entries, int playOffset) where T: ISectionEntry
       {
@@ -232,6 +236,15 @@ namespace Husic.Engine.Playback.Queue
                   NextSong = null;
             }
          }
+      }
+      private void GetStartingSong()
+      {
+         if (PlayOnceSection.Entries.Count > 0)
+            CurrentSong = PlayOnceSection.Entries[0].Song;
+         else if (UpNextSection.Entries.Count > 0)
+            CurrentSong = UpNextSection.Entries[0].Song;
+
+
       }
       #endregion
 
