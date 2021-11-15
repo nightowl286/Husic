@@ -1,7 +1,9 @@
 ﻿using Caliburn.Micro;
 using Husic.Standard.Playback;
+using Husic.Standard.Playback.Queue;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,7 @@ namespace Husic.Windows.Playback
    {
       #region Private
       private readonly IPlayer _Player;
+      private readonly IPlayQueue _PlayQueue;
       private readonly Timer _Timer;
       #endregion
 
@@ -73,14 +76,18 @@ namespace Husic.Windows.Playback
       }
       public ISong CurrentlyPlaying { get => _CurrentlyPlaying; private set => Set(ref _CurrentlyPlaying, value); }
       #endregion
-      public HusicPlayer(IPlayer player)
+      public HusicPlayer(IPlayer player, IPlayQueue playQueue)
       {
          _Player = player;
+         _PlayQueue = playQueue;
+         Volume = player.Volume;
+
          _Timer = new Timer();
          _Timer.Elapsed += Timer_Elapsed;
          _Timer.Interval = 50;
          _Timer.AutoReset = true;
-         Volume = player.Volume;
+
+         _PlayQueue.PropertyChanged += PlayQueue_PropertyChanged;
       }
 
       #region Events
@@ -99,9 +106,30 @@ namespace Husic.Windows.Playback
             }
          }
       }
+      private void PlayQueue_PropertyChanged(object sender, PropertyChangedEventArgs e)
+      {
+         if (e.PropertyName == nameof(IPlayQueue.CurrentSong))
+         {
+            if (_PlayQueue.CurrentSong == null)
+               Stop();
+            else
+            {
+               Play(_PlayQueue.CurrentSong);
+            }
+         }
+      }
       #endregion
 
       #region Methods
+      private void Stop()
+      {
+         CurrentlyPlaying = null;
+         _Player.Stop();
+         IsSongLoaded = false;
+         _IsPlaying = false;
+         _Timer.Stop();
+            NotifyOfPropertyChange(() => IsPlaying);
+      }
       public void Pause()
       {
          if (IsPlaying)
@@ -126,12 +154,11 @@ namespace Husic.Windows.Playback
       public void Play()
       {
          if (!IsPlaying)
-         {
-            _Player.Play();
             _Timer.Start();
-            _IsPlaying = true;
-            NotifyOfPropertyChange(() => IsPlaying);
-         }
+
+         _Player.Play();
+         _IsPlaying = true;
+         NotifyOfPropertyChange(() => IsPlaying);
       }
       #endregion
    }
