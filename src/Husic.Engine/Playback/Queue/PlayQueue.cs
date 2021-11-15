@@ -116,13 +116,12 @@ namespace Husic.Engine.Playback.Queue
       {
          if (NextSong == null) return;
 
-         ISong oldCurrent = CurrentSong;
+         PreviousSong = CurrentSong;
          CurrentSong = NextSong;
 
          if (CurrentPlayIndex < 0)
          {
             CurrentPlayIndex++;
-            PreviousSong = oldCurrent;
 
             GetNextSong();
          }
@@ -243,8 +242,8 @@ namespace Husic.Engine.Playback.Queue
             CurrentSong = PlayOnceSection.Entries[0].Song;
          else if (UpNextSection.Entries.Count > 0)
             CurrentSong = UpNextSection.Entries[0].Song;
-
-
+         else
+            CurrentSong = null;
       }
       #endregion
 
