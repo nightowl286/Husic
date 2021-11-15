@@ -1,0 +1,1 @@
+﻿SELECT Version FROM versions WHERE TableName=@Name COLLATE NOCASE;

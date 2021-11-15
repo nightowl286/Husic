@@ -9,6 +9,7 @@ using Models = Husic.DataAccess.Models;
 using Internals = Husic.DataAccess.Internal.Models;
 using System.Linq;
 using Husic.Standard.DataAccess;
+using System.Xml.Linq;
 
 namespace Husic.DataAccess
 {
@@ -47,9 +48,10 @@ namespace Husic.DataAccess
       }
       public void EnsureTables()
       {
+         EnsureVersionsTable().Wait();
          Task[] tasks = new[]
          {
-            EnsureTable("Songs", false)
+            EnsureTable("Songs", 1)
          };
 
          Task.WaitAll(tasks);
@@ -57,6 +59,37 @@ namespace Husic.DataAccess
       #endregion
 
       #region Functions
+      private static async Task<int> GetTableVersion(string table)
+      {
+         string sql = LoadInternal("GetTableVersion");
+         dynamic param = new { Name = table };
+         IEnumerable<int> results = await SqliteDataAccess.Query<int, dynamic>(sql, param);
+         return results.FirstOrDefault();
+      }
+      private static Task SetTableVersion(string table, int version)
+      {
+         string sql = LoadInternal("SetTableVersion");
+         dynamic param = new { Name = table, Version = version };
+         return SqliteDataAccess.Execute(sql, param);
+      }
+      private static Task EnsureVersionsTable() => EnsureTable("Versions", false);
+      private static async Task EnsureTable(string tableName, int minVersion)
+      {
+         string sql;
+         if (await Exists(tableName))
+         {
+            int version = await GetTableVersion(tableName);
+            if (version >= minVersion)
+               return;
+
+            await SetTableVersion(tableName, minVersion);
+            sql = LoadSql($"Update{tableName}Table"); // might be possible to use LoadInternal
+         }
+         else
+            sql = LoadSql($"Create{tableName}Table");
+
+         await SqliteDataAccess.Execute(sql);
+      }
       private static async Task EnsureTable(string tableName, bool update = true)
       {
          string sql;
@@ -78,7 +111,7 @@ namespace Husic.DataAccess
          param.Add("@Type", type);
          string sql = LoadSql("Exists");
 
-         string result = await SqliteDataAccess.QueryFirst<string,DynamicParameters>(sql, param);
+         string result = (await SqliteDataAccess.Query<string,DynamicParameters>(sql, param)).FirstOrDefault();
 
          return name.Equals(result, StringComparison.OrdinalIgnoreCase);
 

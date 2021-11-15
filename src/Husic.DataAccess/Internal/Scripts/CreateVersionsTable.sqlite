@@ -1,0 +1,4 @@
+﻿CREATE TABLE versions (
+	TableName TEXT NOT NULL UNIQUE,
+	Version INTEGER NOT NULL DEFAULT 1
+);

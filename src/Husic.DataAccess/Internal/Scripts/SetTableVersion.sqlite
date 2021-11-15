@@ -1,0 +1,1 @@
+﻿INSERT OR REPLACE INTO versions(TableName,Version) VALUES(@Name, @Version);

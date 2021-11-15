@@ -8,12 +8,18 @@
 
   <ItemGroup>
     <None Remove="Internal\Scripts\CreateSongsTable.sqlite" />
+    <None Remove="Internal\Scripts\CreateVersionsTable.sqlite" />
     <None Remove="Internal\Scripts\Exists.sqlite" />
+    <None Remove="Internal\Scripts\GetTableVersion.sqlite" />
     <None Remove="Internal\Scripts\QuerySongsTable.sqlite" />
+    <None Remove="Internal\Scripts\SetTableVersion.sqlite" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Internal\Scripts\CreateSongsTable.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\CreateVersionsTable.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\SetTableVersion.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\GetTableVersion.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Exists.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\QuerySongsTable.sqlite" />
   </ItemGroup>
