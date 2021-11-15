@@ -1,6 +1,8 @@
 ﻿using Caliburn.Micro;
+using Husic.Engine.Playback.Queue;
 using Husic.Standard.DataAccess;
 using Husic.Standard.Playback;
+using Husic.Standard.Playback.Queue;
 using Husic.Windows.Playback;
 using Husic.Windows.ViewModels;
 using System;
@@ -35,11 +37,15 @@ namespace Husic.Windows
             .Singleton<IEventAggregator, EventAggregator>()
             .Singleton<SimpleContainer>()
             .Singleton<IHusicPlayer, HusicPlayer>()
-            .Singleton<IDataAccess, DataAccess.DataAccess>();
+            .Singleton<IDataAccess, DataAccess.DataAccess>()
+            .Singleton<IPlayQueue, PlayQueue>();
 
          _Container.PerRequest<IPlayer, WindowsPlayer>()
             .PerRequest<ShellViewModel>()
-            .PerRequest<DashboardViewModel>();
+            .PerRequest<DashboardViewModel>()
+            .PerRequest<IHistorySection, HistorySection>()
+            .PerRequest<IUpNextSection, UpNextSection>()
+            .PerRequest<IQueueSection, QueueSection>();
       }
       protected override void OnStartup(object sender, StartupEventArgs e)
       {
