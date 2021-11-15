@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
@@ -25,7 +26,19 @@ namespace Husic.Windows.Playback
          get => _Player.Volume;
          set => _Player.Volume = value;
       }
-      public TimeSpan Duration => _Player.NaturalDuration.HasTimeSpan ? _Player.NaturalDuration.TimeSpan : TimeSpan.Zero;
+      public TimeSpan Duration
+      {
+         get
+         {
+            if (_Player.Source == null)
+               return TimeSpan.Zero;
+
+            while (!_Player.NaturalDuration.HasTimeSpan)
+               Thread.Sleep(10);
+
+            return _Player.NaturalDuration.TimeSpan;
+         }
+      }
       public TimeSpan Position
       {
          get => _Player.Position;
