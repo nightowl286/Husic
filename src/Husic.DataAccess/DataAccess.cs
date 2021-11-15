@@ -40,7 +40,7 @@ namespace Husic.DataAccess
             };
          }
 
-         string sql = LoadInternal("QuerySongsTable");
+         string sql = LoadInternal("QueryTable_Songs");
 
          IEnumerable<Internals.SongModel> songs = await SqliteDataAccess.Query<Internals.SongModel>(sql);
 
@@ -83,10 +83,10 @@ namespace Husic.DataAccess
                return;
 
             await SetTableVersion(tableName, minVersion);
-            sql = LoadSql($"Update{tableName}Table"); // might be possible to use LoadInternal
+            sql = LoadSql($"UpdateTable_{tableName}"); // might be possible to use LoadInternal
          }
          else
-            sql = LoadSql($"Create{tableName}Table");
+            sql = LoadSql($"CreateTable_{tableName}");
 
          await SqliteDataAccess.Execute(sql);
       }
@@ -97,10 +97,10 @@ namespace Husic.DataAccess
          {
             if (!update)
                return;
-            sql = LoadSql($"Update{tableName}Table");
+            sql = LoadSql($"UpdateTable_{tableName}");
          }
          else
-            sql = LoadSql($"Create{tableName}Table");
+            sql = LoadSql($"CreateTable_{tableName}");
 
          await SqliteDataAccess.Execute(sql);
       }
