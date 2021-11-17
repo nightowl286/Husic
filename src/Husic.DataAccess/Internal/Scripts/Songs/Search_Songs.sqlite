@@ -1,0 +1,10 @@
+﻿SELECT 
+	Id, Name, Duration, Source
+FROM 
+	Songs
+WHERE
+	Name LIKE @Query
+ORDER BY
+	{0} {1}
+LIMIT
+	@Offset, @Page;

@@ -1,0 +1,8 @@
+﻿SELECT 
+	Id, Name, Duration, Source
+FROM
+	Songs
+ORDER BY
+	{0} {1}
+LIMIT
+	@Offset, @Page;

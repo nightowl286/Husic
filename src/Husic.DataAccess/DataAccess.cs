@@ -28,24 +28,6 @@ namespace Husic.DataAccess
       }
 
       #region Methods
-      public async Task<IEnumerable<ISong>> GetSongs()
-      {
-         static ISong Convert(Internals.SongModel model)
-         {
-            return new Models.SongModel(model.Id)
-            {
-               Duration = TimeSpan.FromSeconds(model.Duration),
-               Name = model.Name,
-               Source = new Uri(model.Source)
-            };
-         }
-
-         string sql = LoadInternal("QueryTable_Songs");
-
-         IEnumerable<Internals.SongModel> songs = await SqliteDataAccess.Query<Internals.SongModel>(sql);
-
-         return songs.Select(Convert);
-      }
       public void EnsureTables()
       {
          EnsureVersionsTable().Wait();
@@ -56,19 +38,20 @@ namespace Husic.DataAccess
 
          Task.WaitAll(tasks);
       }
+      public string Load(string scriptName) => LoadSql(scriptName);
       #endregion
 
       #region Functions
       private static async Task<int> GetTableVersion(string table)
       {
-         string sql = LoadInternal("GetTableVersion");
+         string sql = LoadSql("Tables.GetTableVersion");
          dynamic param = new { Name = table };
          IEnumerable<int> results = await SqliteDataAccess.Query<int, dynamic>(sql, param);
          return results.FirstOrDefault();
       }
       private static Task SetTableVersion(string table, int version)
       {
-         string sql = LoadInternal("SetTableVersion");
+         string sql = LoadSql("Tables.SetTableVersion");
          dynamic param = new { Name = table, Version = version };
          return SqliteDataAccess.Execute(sql, param);
       }
@@ -83,10 +66,10 @@ namespace Husic.DataAccess
                return;
 
             await SetTableVersion(tableName, minVersion);
-            sql = LoadSql($"UpdateTable_{tableName}"); // might be possible to use LoadInternal
+            sql = LoadSql($"Tables.Update.UpdateTable_{tableName}"); // might be possible to use LoadInternal
          }
          else
-            sql = LoadSql($"CreateTable_{tableName}");
+            sql = LoadSql($"Tables.Create.CreateTable_{tableName}");
 
          await SqliteDataAccess.Execute(sql);
       }
@@ -97,34 +80,29 @@ namespace Husic.DataAccess
          {
             if (!update)
                return;
-            sql = LoadSql($"UpdateTable_{tableName}");
+            sql = LoadSql($"Tables.Update.UpdateTable_{tableName}");
          }
          else
-            sql = LoadSql($"CreateTable_{tableName}");
+            sql = LoadSql($"Tables.Create.CreateTable_{tableName}");
 
          await SqliteDataAccess.Execute(sql);
       }
       private static async Task<bool> Exists(string name, string type = "table")
       {
-         DynamicParameters param = new DynamicParameters();
-         param.Add("@Name", name);
-         param.Add("@Type", type);
          string sql = LoadSql("Exists");
 
-         string result = (await SqliteDataAccess.Query<string,DynamicParameters>(sql, param)).FirstOrDefault();
+         dynamic param = new { Name = name, Type = type };
 
+         IEnumerable<string> results = (await SqliteDataAccess.Query<string, dynamic>(sql, param));
+
+         string result = results.FirstOrDefault();
          return name.Equals(result, StringComparison.OrdinalIgnoreCase);
 
       }
-      private static string LoadInternal(string name)
+      public static string LoadSql(string name)
       {
          string fullName = GetName(name);
          return SqliteDataAccess.LoadSql(fullName, _ContainingAssembly);
-      }
-      private static string LoadSql(string name)
-      {
-         string fullName = GetName(name);
-         return SqliteDataAccess.LoadSql(fullName);
       }
       private static string GetName(string name)
       {

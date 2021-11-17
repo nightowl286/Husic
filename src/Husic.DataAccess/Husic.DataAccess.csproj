@@ -13,15 +13,17 @@
     <None Remove="Internal\Scripts\GetTableVersion.sqlite" />
     <None Remove="Internal\Scripts\QueryTable_Songs.sqlite" />
     <None Remove="Internal\Scripts\SetTableVersion.sqlite" />
+    <None Remove="Internal\Scripts\Songs\Search_Songs.sqlite" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Internal\Scripts\CreateTable_Songs.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\CreateTable_Versions.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\SetTableVersion.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\GetTableVersion.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Songs\Search_Songs.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Tables\Create\CreateTable_Songs.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Tables\Create\CreateTable_Versions.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Tables\SetTableVersion.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Tables\GetTableVersion.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Exists.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\QueryTable_Songs.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Songs\Get_Songs.sqlite" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +33,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Husic.Standard\Husic.Standard.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Internal\Scripts\Tables\Update\" />
   </ItemGroup>
 
 </Project>

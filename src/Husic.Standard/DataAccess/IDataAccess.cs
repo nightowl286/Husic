@@ -9,8 +9,8 @@ namespace Husic.Standard.DataAccess
    public interface IDataAccess
    {
       #region Methods
-      Task<IEnumerable<ISong>> GetSongs();
       void EnsureTables();
+      string Load(string scriptName);
       #endregion
    }
 }
