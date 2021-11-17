@@ -1,0 +1,7 @@
+﻿SELECT 
+	Id, Name, Duration, Source
+FROM
+	Songs
+WHERE 
+	Id = @Id
+LIMIT 1;

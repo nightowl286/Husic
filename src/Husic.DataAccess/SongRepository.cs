@@ -24,13 +24,48 @@ namespace Husic.DataAccess
       }
 
       #region Basic CRUD Methods
-      public Task<ISong> CreateSong(ISong data) => throw new NotImplementedException();
-      public Task<ISong> GetSong(int id) => throw new NotImplementedException();
+      public async Task<ISong> CreateSong(ISong data)
+      {
+         string sql = Load("Create");
+         dynamic param = new
+         {
+            Name = data.Name,
+            Duration = data.Duration.TotalSeconds,
+            Source = data.Source.AbsolutePath
+         };
+
+         int songId = await SqliteDataAccess.QueryFirst<int, dynamic>(sql, param);
+
+         // Maybe change this, unsure which approach is better, but this
+         // seems to reduce duplicate code for determining which columns
+         // will be received
+         return await GetSong(songId);
+      }
+      public async Task<ISong> GetSong(int id)
+      {
+         string sql = Load("Get");
+         dynamic param = new { Id = id };
+
+         SongModel song = await SqliteDataAccess.QueryFirst<SongModel, dynamic>(sql, param);
+
+         ISong converted = Convert(song);
+
+         return converted;
+      }
       public Task<ISong> UpdateSong(int id, ISong data) => throw new NotImplementedException();
       public Task DeleteSong(int id) => throw new NotImplementedException();
       #endregion
 
       #region Methods
+      public ISong CreateNew(string name, TimeSpan duration, Uri source)
+      {
+         return new Models.SongModel(-1)
+         {
+            Name = name,
+            Duration = duration,
+            Source = source
+         };
+      }
       public async Task<IEnumerable<ISong>> GetSongs(uint page, string sortBy = "Id", bool ascending = true)
       {
          string sql = Load("Query");

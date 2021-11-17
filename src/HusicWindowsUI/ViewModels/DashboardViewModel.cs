@@ -30,7 +30,16 @@ namespace Husic.Windows.ViewModels
          player.PropertyChanged += Player_PropertyChanged;
          playQueue.PropertyChanged += PlayQueue_PropertyChanged;
 
-         songRepo.GetSongs(0).ContinueWith(songs => App.Current.Dispatcher.Invoke(() => AddSongs(songs.Result)));
+         
+         Task.Run(() => Stuff(songRepo));
+      }
+
+
+      private async Task Stuff(ISongRepository songRepo)
+      {
+         IEnumerable<ISong> songs = await songRepo.GetSongs(0);
+
+         App.Current.Dispatcher.Invoke(() => AddSongs(songs));
       }
 
       #region Events

@@ -16,6 +16,7 @@ namespace Husic.Standard.DataAccess
       #endregion
 
       #region Methods
+      ISong CreateNew(string name, TimeSpan duration, Uri source);
       Task<IEnumerable<ISong>> GetSongs(uint page, string sortBy = "Id", bool ascending = true);
       Task<IEnumerable<ISong>> SearchSongs(string query, uint page, string sortBy = "Id", bool ascending = true);
       #endregion

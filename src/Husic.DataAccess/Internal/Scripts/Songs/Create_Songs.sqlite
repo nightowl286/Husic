@@ -1,0 +1,11 @@
+﻿INSERT INTO 
+	Songs(Name, Duration, Source)
+VALUES
+	(@Name, @Duration, @Source);
+
+SELECT 
+	Id
+FROM 
+	Songs
+WHERE 
+	rowid = LAST_INSERT_ROWID();

@@ -13,10 +13,14 @@
     <None Remove="Internal\Scripts\GetTableVersion.sqlite" />
     <None Remove="Internal\Scripts\QueryTable_Songs.sqlite" />
     <None Remove="Internal\Scripts\SetTableVersion.sqlite" />
+    <None Remove="Internal\Scripts\Songs\Create_Songs.sqlite" />
+    <None Remove="Internal\Scripts\Songs\Get_Songs.sqlite" />
     <None Remove="Internal\Scripts\Songs\Search_Songs.sqlite" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Internal\Scripts\Songs\Get_Songs.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Songs\Create_Songs.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Songs\Search_Songs.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Tables\Create\CreateTable_Songs.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Tables\Create\CreateTable_Versions.sqlite" />
