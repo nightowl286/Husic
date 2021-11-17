@@ -23,7 +23,7 @@
     <EmbeddedResource Include="Internal\Scripts\Tables\SetTableVersion.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Tables\GetTableVersion.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Exists.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\Songs\Get_Songs.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Songs\Query_Songs.sqlite" />
   </ItemGroup>
 
   <ItemGroup>

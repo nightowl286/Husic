@@ -20,7 +20,7 @@ namespace Husic.Windows.ViewModels
       #region Properties
       public IHusicPlayer Player => _Player;
       #endregion
-      public DashboardViewModel(IHusicPlayer player, IDataAccess access, IPlayQueue playQueue)
+      public DashboardViewModel(IHusicPlayer player, ISongRepository songRepo, IPlayQueue playQueue)
       {
          _Player = player;
          _PlayQueue = playQueue;
@@ -30,9 +30,8 @@ namespace Husic.Windows.ViewModels
          player.PropertyChanged += Player_PropertyChanged;
          playQueue.PropertyChanged += PlayQueue_PropertyChanged;
 
-         access.GetSongs().ContinueWith(songs => App.Current.Dispatcher.Invoke(() => AddSongs(songs.Result)));
+         songRepo.GetSongs(0).ContinueWith(songs => App.Current.Dispatcher.Invoke(() => AddSongs(songs.Result)));
       }
-
 
       #region Events
       private void Player_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

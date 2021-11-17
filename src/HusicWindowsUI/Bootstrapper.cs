@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Husic.DataAccess;
 using Husic.Engine.Playback.Queue;
 using Husic.Standard.DataAccess;
 using Husic.Standard.Playback;
@@ -45,7 +46,8 @@ namespace Husic.Windows
             .PerRequest<DashboardViewModel>()
             .PerRequest<IHistorySection, HistorySection>()
             .PerRequest<IUpNextSection, UpNextSection>()
-            .PerRequest<IQueueSection, QueueSection>();
+            .PerRequest<IQueueSection, QueueSection>()
+            .PerRequest<ISongRepository, SongRepository>();
       }
       protected override void OnStartup(object sender, StartupEventArgs e)
       {
