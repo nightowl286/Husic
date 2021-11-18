@@ -2,8 +2,11 @@
 using Husic.Standard.DataAccess;
 using Husic.Standard.Playback;
 using Husic.Standard.Playback.Queue;
+using Husic.Windows.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,9 +40,13 @@ namespace Husic.Windows.ViewModels
 
       private async Task Stuff(ISongRepository songRepo)
       {
-         IEnumerable<ISong> songs = await songRepo.GetSongs(0);
-
-         App.Current.Dispatcher.Invoke(() => AddSongs(songs));
+         uint page = 0;
+         IEnumerable<ISong> songs = await songRepo.GetSongs(page);
+         while (songs.Count() > 0)
+         {
+            AddSongs(songs);
+            songs = await songRepo.GetSongs(++page);
+         }
       }
 
       #region Events
