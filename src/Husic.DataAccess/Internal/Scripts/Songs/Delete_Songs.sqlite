@@ -1,0 +1,4 @@
+﻿DELETE FROM 
+	Songs
+WHERE
+	Id = @Id;

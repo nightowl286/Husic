@@ -31,7 +31,7 @@ namespace Husic.DataAccess
          {
             Name = data.Name,
             Duration = data.Duration.TotalSeconds,
-            Source = data.Source.AbsolutePath
+            Source = GetPath(data.Source)
          };
 
          int songId = await SqliteDataAccess.QueryFirst<int, dynamic>(sql, param);
@@ -52,8 +52,26 @@ namespace Husic.DataAccess
 
          return converted;
       }
-      public Task<ISong> UpdateSong(int id, ISong data) => throw new NotImplementedException();
-      public Task DeleteSong(int id) => throw new NotImplementedException();
+      public Task UpdateSong(ISong data)
+      {
+         string sql = Load("Update");
+         dynamic param = new
+         {
+            Id = data.Id,
+            Name = data.Name,
+            Source = GetPath(data.Source),
+            Duration = data.Duration.TotalSeconds
+         };
+
+         return SqliteDataAccess.Execute(sql, param);
+      }
+      public Task DeleteSong(int id)
+      {
+         string sql = Load("Delete");
+         dynamic param = new { Id = id };
+
+         return SqliteDataAccess.Execute(sql, param);
+      }
       #endregion
 
       #region Methods
@@ -108,6 +126,7 @@ namespace Husic.DataAccess
       #endregion
 
       #region Helpers
+      private static string GetPath(Uri source) => System.Web.HttpUtility.UrlDecode(source.LocalPath);
       private static bool IsValidSongColumn(string column)
       {
          // Definitely need to find a better way of doing this
