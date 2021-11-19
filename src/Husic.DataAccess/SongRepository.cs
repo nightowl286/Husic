@@ -14,8 +14,10 @@ namespace Husic.DataAccess
    {
       #region Consts
       private const int PAGE_SIZE = 30;
-         #endregion
+      #endregion
+
       #region Private
+      private readonly DataCache<int, ISong> _Cache = new DataCache<int, ISong>();
       private readonly IDataAccess _DataAccess;
       #endregion
       public SongRepository(IDataAccess dataAccess)
@@ -39,10 +41,17 @@ namespace Husic.DataAccess
          // Maybe change this, unsure which approach is better, but this
          // seems to reduce duplicate code for determining which columns
          // will be received
-         return await GetSong(songId);
+         ISong song = await GetSong(songId);
+
+         _Cache.Add(songId, song);
+
+         return song;
       }
       public async Task<ISong> GetSong(int id)
       {
+         if (_Cache.TryGet(id, out ISong cachedSong))
+            return cachedSong;
+
          string sql = Load("Get");
          dynamic param = new { Id = id };
 
@@ -52,29 +61,59 @@ namespace Husic.DataAccess
 
          return converted;
       }
-      public Task UpdateSong(ISong data)
+      public async Task<ISong> UpdateSong(int id, ISong data)
       {
          string sql = Load("Update");
          dynamic param = new
          {
-            Id = data.Id,
+            Id = id,
             Name = data.Name,
             Source = GetPath(data.Source),
             Duration = data.Duration.TotalSeconds
          };
 
-         return SqliteDataAccess.Execute(sql, param);
+         await SqliteDataAccess.Execute(sql, param);
+         if (_Cache.TryGet(id, out ISong cachedData))
+         {
+            cachedData.Name = data.Name;
+            cachedData.Source = data.Source;
+            cachedData.Duration = data.Duration;
+            return cachedData;
+         }
+         else
+         {
+            ISong updatedSong = await GetSong(id);
+            _Cache.Add(updatedSong.Id, updatedSong);
+            return updatedSong;
+         }
       }
       public Task DeleteSong(int id)
       {
          string sql = Load("Delete");
          dynamic param = new { Id = id };
 
+         _Cache.Delete(id);
+
          return SqliteDataAccess.Execute(sql, param);
       }
       #endregion
 
       #region Methods
+      private ISong Convert(SongModel model)
+      {
+         if (_Cache.TryGet(model.Id, out ISong cachedSong))
+            return cachedSong;
+
+         ISong song = new Models.SongModel(model.Id)
+         {
+            Duration = TimeSpan.FromSeconds(model.Duration),
+            Name = model.Name,
+            Source = new Uri(model.Source)
+         };
+
+         _Cache.Add(song.Id, song);
+         return song;
+      }
       public ISong CreateNew(string name, TimeSpan duration, Uri source)
       {
          return new Models.SongModel(-1)
@@ -144,15 +183,6 @@ namespace Husic.DataAccess
          }
       }
       private string Load(string action) => _DataAccess.Load($"Songs.{action}_Songs");
-      private static ISong Convert(SongModel model)
-      {
-         return new Models.SongModel(model.Id)
-         {
-            Duration = TimeSpan.FromSeconds(model.Duration),
-            Name = model.Name,
-            Source = new Uri(model.Source)
-         };
-      }
       #endregion
    }
 }

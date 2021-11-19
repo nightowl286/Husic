@@ -11,7 +11,7 @@ namespace Husic.Standard.DataAccess
       #region Basic CRUD
       Task<ISong> CreateSong(ISong data);
       Task<ISong> GetSong(int id);
-      Task UpdateSong(ISong data);
+      Task<ISong> UpdateSong(int id, ISong data);
       Task DeleteSong(int id);
       #endregion
 
