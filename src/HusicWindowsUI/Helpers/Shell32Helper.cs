@@ -12,7 +12,7 @@ namespace Husic.Windows.Helpers
    {
       public static TimeSpan? GetDuration(string audioFile)
       {
-         ShellFile file = ShellFile.FromFilePath(audioFile);
+         using ShellFile file = ShellFile.FromFilePath(audioFile);
          ulong? nano = file.Properties.System.Media.Duration.Value;
          if (!nano.HasValue)
             return null;
