@@ -1,0 +1,13 @@
+﻿CREATE TABLE playlist_entries (
+	PlaylistId INTEGER NOT NULL,
+	SongId INTEGER NOT NULL,
+	EntryIndex INTEGER NOT NULL,
+
+	UNIQUE(PlaylistId, EntryIndex),
+
+	FOREIGN KEY (PlaylistId) REFERENCES playlists (Id)
+		ON DELETE CASCADE,
+
+	FOREIGN KEY (SongId) REFERENCES songs (Id)
+		ON DELETE CASCADE
+);

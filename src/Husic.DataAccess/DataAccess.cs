@@ -33,7 +33,9 @@ namespace Husic.DataAccess
          EnsureVersionsTable().Wait();
          Task[] tasks = new[]
          {
-            EnsureTable("Songs", 1)
+            EnsureTable("Songs", 1),
+            EnsureTable("Playlists", 1),
+            EnsureTable("Playlist_Entries", 1),
          };
 
          Task.WaitAll(tasks);
@@ -69,7 +71,10 @@ namespace Husic.DataAccess
             sql = LoadSql($"Tables.Update.UpdateTable_{tableName}"); // might be possible to use LoadInternal
          }
          else
+         {
             sql = LoadSql($"Tables.Create.CreateTable_{tableName}");
+            await SetTableVersion(tableName, minVersion);
+         }
 
          await SqliteDataAccess.Execute(sql);
       }

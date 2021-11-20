@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -18,6 +18,8 @@
     <None Remove="Internal\Scripts\Songs\Get_Songs.sqlite" />
     <None Remove="Internal\Scripts\Songs\Search_Songs.sqlite" />
     <None Remove="Internal\Scripts\Songs\Update_Songs.sqlite" />
+    <None Remove="Internal\Scripts\Tables\Create\CreateTable_Playlists.sqlite" />
+    <None Remove="Internal\Scripts\Tables\Create\CreateTable_Playlist_Entries.sqlite" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +28,8 @@
     <EmbeddedResource Include="Internal\Scripts\Songs\Get_Songs.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Songs\Create_Songs.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Songs\Search_Songs.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Tables\Create\CreateTable_Playlist_Entries.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Tables\Create\CreateTable_Playlists.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Tables\Create\CreateTable_Songs.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Tables\Create\CreateTable_Versions.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Tables\SetTableVersion.sqlite" />
