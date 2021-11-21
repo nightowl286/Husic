@@ -17,12 +17,14 @@
     <None Remove="Internal\Scripts\Songs\Delete_Songs.sqlite" />
     <None Remove="Internal\Scripts\Songs\Get_Songs.sqlite" />
     <None Remove="Internal\Scripts\Songs\Search_Songs.sqlite" />
+    <None Remove="Internal\Scripts\Songs\UpdateDuration_Songs.sqlite" />
     <None Remove="Internal\Scripts\Songs\Update_Songs.sqlite" />
     <None Remove="Internal\Scripts\Tables\Create\CreateTable_Playlists.sqlite" />
     <None Remove="Internal\Scripts\Tables\Create\CreateTable_Playlist_Entries.sqlite" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Internal\Scripts\Songs\UpdateDuration_Songs.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Songs\Update_Songs.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Songs\Delete_Songs.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Songs\Get_Songs.sqlite" />

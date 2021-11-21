@@ -1,0 +1,5 @@
+﻿UPDATE Songs
+SET
+	Duration = @Duration
+WHERE
+	Id = @Id;

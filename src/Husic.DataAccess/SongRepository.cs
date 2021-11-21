@@ -4,6 +4,7 @@ using Husic.Standard.DataAccess;
 using Husic.Standard.Playback;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,6 +87,18 @@ namespace Husic.DataAccess
             _Cache.Add(updatedSong.Id, updatedSong);
             return updatedSong;
          }
+      }
+      public Task SaveUpdatedDuration(ISong song)
+      {
+         string sql = Load("UpdateDuration");
+         dynamic param = new
+         {
+            Id = song.Id,
+            Duration = song.Duration.TotalSeconds
+         };
+
+         Debug.Assert(_Cache.TryGet(song.Id, out _));
+         return SqliteDataAccess.Execute(sql, param);
       }
       public Task DeleteSong(int id)
       {

@@ -12,6 +12,7 @@ namespace Husic.Standard.DataAccess
       Task<ISong> CreateSong(ISong data);
       Task<ISong> GetSong(int id);
       Task<ISong> UpdateSong(int id, ISong data);
+      Task SaveUpdatedDuration(ISong song);
       Task DeleteSong(int id);
       #endregion
 
