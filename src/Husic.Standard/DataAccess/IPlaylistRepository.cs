@@ -16,6 +16,11 @@ namespace Husic.Standard.DataAccess
       #endregion
 
       #region Methods
+      Task<IEnumerable<IPlaylist>> GetPlaylists(uint page, string sortBy = "Id", bool ascending = true);
+      Task<IEnumerable<IPlaylist>> SearchPlaylists(string query, uint page, string sortBy = "Id", bool ascending = true);
+      Task RemoveSongFromPlaylists(int songId);
+      Task RemoveEntryFromPlaylist(IPlaylist playlist, int entryIndex);
+      Task MoveEntryInPlaylist(IPlaylist playlist, int fromIndex, int toIndex);
       IPlaylist CreateNew(string name);
       Task<IEnumerable<IPlaylistEntry>> GetEntries(int playlistId, uint page);
       #endregion
