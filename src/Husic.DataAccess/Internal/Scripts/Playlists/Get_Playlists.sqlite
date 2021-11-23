@@ -1,0 +1,7 @@
+﻿SELECT 
+	Id, Name, Count
+FROM
+	Playlists
+WHERE 
+	Id = @Id
+LIMIT 1;

@@ -1,0 +1,8 @@
+﻿SELECT 
+	Id, Name, Count
+FROM
+	Playlists
+ORDER BY
+	{0} {1}
+LIMIT
+	@Offset, @Page;

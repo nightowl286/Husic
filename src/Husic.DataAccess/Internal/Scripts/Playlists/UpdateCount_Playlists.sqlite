@@ -1,0 +1,5 @@
+﻿UPDATE Playlists
+SET
+	Count = @Count,
+WHERE
+	Id = @Id;

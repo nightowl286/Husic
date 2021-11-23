@@ -1,0 +1,4 @@
+﻿DELETE FROM 
+	Playlists
+WHERE
+	Id = @Id;

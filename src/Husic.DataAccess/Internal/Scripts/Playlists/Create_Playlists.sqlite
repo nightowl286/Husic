@@ -1,0 +1,11 @@
+﻿INSERT INTO 
+	Playlists(Name)
+VALUES
+	(@Name);
+
+SELECT 
+	Id
+FROM 
+	Playlists
+WHERE 
+	rowid = LAST_INSERT_ROWID();

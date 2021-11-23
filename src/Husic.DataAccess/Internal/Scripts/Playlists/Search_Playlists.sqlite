@@ -1,0 +1,10 @@
+﻿SELECT 
+	Id, Name, Count
+FROM 
+	Playlists
+WHERE
+	Name LIKE @Query
+ORDER BY
+	{0} {1}
+LIMIT
+	@Offset, @Page;
