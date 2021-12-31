@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>D:\Repos\Husic\secrets\strong_key.rsa</AssemblyOriginatorKeyFile>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -60,11 +61,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Husic.Standard\Husic.Standard.csproj" />
+    <Folder Include="Internal\Scripts\Tables\Update\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Internal\Scripts\Tables\Update\" />
+    <ProjectReference Include="..\Husic.Standard\Husic.Standard.csproj" />
   </ItemGroup>
 
 </Project>
