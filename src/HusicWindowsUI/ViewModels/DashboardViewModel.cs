@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Husic.Standard.DataAccess;
+using Husic.Standard.DataAccess.Repositories;
 using Husic.Standard.Playback;
 using Husic.Standard.Playback.Queue;
 using Husic.Windows.Helpers;

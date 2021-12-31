@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Husic.DataAccess.Internal.Models;
 using Husic.Standard.DataAccess;
+using Husic.Standard.DataAccess.Repositories;
 using Husic.Standard.Playback;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Husic.DataAccess
+namespace Husic.DataAccess.Repositories
 {
    public class SongRepository : ISongRepository
    {

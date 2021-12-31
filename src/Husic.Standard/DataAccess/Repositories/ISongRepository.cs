@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Husic.Standard.DataAccess
+namespace Husic.Standard.DataAccess.Repositories
 {
    public interface ISongRepository
    {
