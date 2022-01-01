@@ -24,6 +24,13 @@ namespace Husic.DataAccess.Cache
       #endregion
 
       #region Methods
+      public void AddStrong(TKey key, TData data)
+      {
+         StrongEntryHolder<TData> holder = new StrongEntryHolder<TData>(data);
+         CacheEntry<TData> entry = new CacheEntry<TData>(holder);
+
+         Add(key, entry);
+      }
       public void Add(TKey key, [DisallowNull] ICacheEntry<TData> entry)
       {
          if (_Entries.TryGetValue(key, out ICacheEntry<TData>? stored))
@@ -105,5 +112,16 @@ namespace Husic.DataAccess.Cache
       }
       public IEnumerable<KeyValuePair<TKey, ICacheEntry<TData>>> ByAccessDate() => _Entries.OrderBy(pair => pair.Value.AccessTime);
       #endregion
+   }
+
+   public static class DataCacheExtensions
+   {
+      public static void AddWeak<TKey, TData>(this DataCache<TKey, TData> cache, TKey key, TData? data) where TKey : notnull where TData : class
+      {
+         WeakEntryHolder<TData> holder = new WeakEntryHolder<TData>(data);
+         CacheEntry<TData> entry = new CacheEntry<TData>(holder);
+
+         cache.Add(key, entry);
+      }
    }
 }
