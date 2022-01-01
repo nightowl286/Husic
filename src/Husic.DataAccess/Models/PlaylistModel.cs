@@ -9,7 +9,7 @@ namespace Husic.DataAccess.Models
    {
       #region Properties
       public int Id { get; private set; }
-      public string Name { get; set; }
+      public string Name { get; set; } = string.Empty;
       public int Count { get; set; }
       #endregion
       public PlaylistModel(int id)

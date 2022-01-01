@@ -43,7 +43,7 @@ namespace Husic.Windows.ViewModels
       {
          uint page = 0;
          IEnumerable<ISong> songs = await songRepo.GetSongs(page);
-         while (songs.Count() > 0)
+         while (songs.Any())
          {
             AddSongs(songs);
             songs = await songRepo.GetSongs(++page);

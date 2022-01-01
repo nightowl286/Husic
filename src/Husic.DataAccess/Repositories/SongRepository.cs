@@ -1,6 +1,6 @@
 ﻿using Dapper;
+using Husic.DataAccess.Cache;
 using Husic.DataAccess.Internal.Models;
-using Husic.Standard.DataAccess;
 using Husic.Standard.DataAccess.Repositories;
 using Husic.Standard.Playback;
 using System;
@@ -12,69 +12,59 @@ using System.Threading.Tasks;
 
 namespace Husic.DataAccess.Repositories
 {
-   public class SongRepository : ISongRepository
+   public class SongRepository : KeyBasedRepository<int, ISong>, ISongRepository
    {
-      #region Consts
-      private const int PAGE_SIZE = 30;
-      #endregion
-
       #region Private
-      private readonly DataCache<int, ISong> _Cache = new DataCache<int, ISong>();
-      private readonly IDataAccess _DataAccess;
+      private readonly Cache.DataCache<int, ISong> _Cache = new Cache.DataCache<int, ISong>();
       #endregion
-      public SongRepository(IDataAccess dataAccess)
+      public SongRepository() : base()
       {
-         _DataAccess = dataAccess;
+         CreateAssemblyScriptContainer("Internal.Scripts.Songs.{0}_Songs.sqlite");
       }
 
       #region Basic CRUD Methods
-      public async Task<ISong> CreateSong(ISong data)
+      protected override async Task<ISong> Create(ISong data, string script)
       {
-         string sql = Load("Create");
          dynamic param = new
          {
-            Name = data.Name,
+            data.Name,
             Duration = data.Duration.TotalSeconds,
             Source = GetPath(data.Source)
          };
 
-         int songId = await SqliteDataAccess.QueryFirst<int, dynamic>(sql, param);
+         int songId = await SqliteDataAccess.QueryFirst<int, dynamic>(script, param);
 
          // Maybe change this, unsure which approach is better, but this
          // seems to reduce duplicate code for determining which columns
          // will be received
-         ISong song = await GetSong(songId);
+         ISong song = await Get(songId);
 
-         _Cache.Add(songId, song);
+         _Cache.AddWeak(songId, song);
 
          return song;
       }
-      public async Task<ISong> GetSong(int id)
+      protected override async Task<ISong> Get(int id, string script)
       {
          if (_Cache.TryGet(id, out ISong cachedSong))
             return cachedSong;
 
-         string sql = Load("Get");
-         dynamic param = new { Id = id };
-
-         SongModel song = await SqliteDataAccess.QueryFirst<SongModel, dynamic>(sql, param);
+         SongModel song = await GetFirst<SongModel>(id, script);
 
          ISong converted = Convert(song);
 
          return converted;
       }
-      public async Task<ISong> UpdateSong(int id, ISong data)
+      protected override async Task<ISong> Update(int id, ISong data, string script)
       {
-         string sql = Load("Update");
          dynamic param = new
          {
             Id = id,
-            Name = data.Name,
+            data.Name,
             Source = GetPath(data.Source),
             Duration = data.Duration.TotalSeconds
          };
 
-         await SqliteDataAccess.Execute(sql, param);
+         await SqliteDataAccess.Execute(script, param);
          if (_Cache.TryGet(id, out ISong cachedData))
          {
             cachedData.Name = data.Name;
@@ -84,35 +74,32 @@ namespace Husic.DataAccess.Repositories
          }
          else
          {
-            ISong updatedSong = await GetSong(id);
-            _Cache.Add(updatedSong.Id, updatedSong);
+            ISong updatedSong = await Get(id);
+            _Cache.AddWeak(updatedSong.Id, updatedSong);
             return updatedSong;
          }
       }
-      public Task SaveUpdatedDuration(ISong song)
+      protected override Task Delete(int id, string script)
       {
-         string sql = Load("UpdateDuration");
-         dynamic param = new
-         {
-            Id = song.Id,
-            Duration = song.Duration.TotalSeconds
-         };
-
-         Debug.Assert(_Cache.TryGet(song.Id, out _));
-         return SqliteDataAccess.Execute(sql, param);
-      }
-      public Task DeleteSong(int id)
-      {
-         string sql = Load("Delete");
-         dynamic param = new { Id = id };
-
          _Cache.Delete(id);
 
-         return SqliteDataAccess.Execute(sql, param);
+         return base.Delete(id, script);  
       }
       #endregion
 
       #region Methods
+      public Task SaveUpdatedDuration(ISong song)
+      {
+         string sql = GetScript("UpdateDuration");
+         dynamic param = new
+         {
+            song.Id,
+            Duration = song.Duration.TotalSeconds
+         };
+
+         Debug.Assert(_Cache.TryGet(song.Id, out ISong _));
+         return SqliteDataAccess.Execute(sql, param);
+      }
       private ISong Convert(SongModel model)
       {
          if (_Cache.TryGet(model.Id, out ISong cachedSong))
@@ -125,7 +112,7 @@ namespace Husic.DataAccess.Repositories
             Source = new Uri(model.Source)
          };
 
-         _Cache.Add(song.Id, song);
+         _Cache.AddWeak(song.Id, song);
          return song;
       }
       public ISong CreateNew(string name, TimeSpan duration, Uri source)
@@ -139,7 +126,7 @@ namespace Husic.DataAccess.Repositories
       }
       public async Task<IEnumerable<ISong>> GetSongs(uint page, string sortBy = "Id", bool ascending = true)
       {
-         string sql = Load("Query");
+         string sql = GetScript("Query");
 
          if (!IsValidSongColumn(sortBy))
             throw new ArgumentException("Invalid column name specified for the sort.", nameof(sortBy));
@@ -148,8 +135,8 @@ namespace Husic.DataAccess.Repositories
 
          dynamic param = new
          {
-            Offset = page * PAGE_SIZE,
-            Page = PAGE_SIZE,
+            Offset = page * PageSize,
+            Page = PageSize,
          };
 
          IEnumerable<SongModel> songs = await SqliteDataAccess.Query<SongModel, dynamic>(sql, param);
@@ -158,7 +145,7 @@ namespace Husic.DataAccess.Repositories
       }
       public async Task<IEnumerable<ISong>> SearchSongs(string query, uint page, string sortBy = "Id", bool ascending = true)
       {
-         string sql = Load("Search");
+         string sql = GetScript("Search");
 
          if (!IsValidSongColumn(sortBy))
             throw new ArgumentException("Invalid column name specified for the sort.", nameof(sortBy));
@@ -168,8 +155,8 @@ namespace Husic.DataAccess.Repositories
          dynamic param = new
          {
             Query = query,
-            Offset = page * PAGE_SIZE,
-            Page = PAGE_SIZE,
+            Offset = page * PageSize,
+            Page = PageSize,
          };
 
          IEnumerable<SongModel> songs = await SqliteDataAccess.Query<SongModel, dynamic>(sql, param);
@@ -196,7 +183,6 @@ namespace Husic.DataAccess.Repositories
                return false;
          }
       }
-      private string Load(string action) => _DataAccess.Load($"Songs.{action}_Songs");
       #endregion
    }
 }

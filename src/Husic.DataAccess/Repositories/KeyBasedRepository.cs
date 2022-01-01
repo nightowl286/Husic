@@ -1,8 +1,10 @@
 ﻿using Dapper;
+using Husic.DataAccess.Scripts;
 using Husic.Standard.DataAccess.Repositories;
 using Husic.Standard.DataAccess.Scripts;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,16 +18,15 @@ namespace Husic.DataAccess.Repositories
       public const string SCRIPT_NAME_GET = "Get";
       public const string SCRIPT_NAME_UPDATE = "Update";
       public const string SCRIPT_NAME_DELETE = "Delete";
-      protected readonly IScriptContainer _Scripts;
       #endregion
 
       #region Properties
       public int PageSize { get; protected set; } = DEFAULT_PAGE_SIZE;
       public string KeyColumn { get; protected set; }
+      protected IScriptContainer? Scripts { get; set; }
       #endregion
-      public KeyBasedRepository(IScriptContainer scriptContainer, string keyColumn = "Id")
+      public KeyBasedRepository(string keyColumn = "Id")
       {
-         _Scripts = scriptContainer;
          KeyColumn = keyColumn;
       }
 
@@ -43,22 +44,22 @@ namespace Husic.DataAccess.Repositories
 
       public Task<TData> Create(TData data)
       {
-         string script = _Scripts.GetScript(SCRIPT_NAME_CREATE);
+         string script = GetScript(SCRIPT_NAME_CREATE);
          return Create(data, script);
       }
       public Task<TData> Get(TKey key)
       {
-         string script = _Scripts.GetScript(SCRIPT_NAME_GET);
+         string script = GetScript(SCRIPT_NAME_GET);
          return Get(key, script);
       }
       public Task<TData> Update(TKey key, TData data)
       {
-         string script = _Scripts.GetScript(SCRIPT_NAME_UPDATE);
+         string script = GetScript(SCRIPT_NAME_UPDATE);
          return Update(key, data, script);
       }
       public Task Delete(TKey key)
       {
-         string script = _Scripts.GetScript(SCRIPT_NAME_DELETE);
+         string script = GetScript(SCRIPT_NAME_DELETE);
          return Delete(key, script);
       }
       #endregion
@@ -70,6 +71,19 @@ namespace Husic.DataAccess.Repositories
          param.Add(KeyColumn, key);
 
          return SqliteDataAccess.QueryFirst<T, DynamicParameters>(script, param);
+      }
+      protected string GetScript(string name)
+      {
+         return Scripts?.GetScript(name) ?? throw new ArgumentException("The scripts container must be set before it is used.");
+      }
+      protected void CreateAssemblyScriptContainer(string nameFormat)
+      {
+         Assembly assembly = Assembly.GetCallingAssembly();
+
+         AssemblyScriptContainer container = new AssemblyScriptContainer(assembly, nameFormat);
+
+         Scripts = container;
+
       }
       #endregion
    }
