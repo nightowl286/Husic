@@ -19,7 +19,7 @@ namespace Husic.DataAccess.Repositories
       #endregion
       public SongRepository() : base()
       {
-         CreateAssemblyScriptContainer("Internal.Scripts.Songs.{0}_Songs.sqlite");
+         CreateAssemblyScriptContainer("Internal.Scripts.Songs.{0}.sqlite");
       }
 
       #region Basic CRUD Methods

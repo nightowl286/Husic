@@ -18,7 +18,7 @@ namespace Husic.DataAccess.Repositories
       #endregion
       public PlaylistRepository() : base()
       {
-         CreateAssemblyScriptContainer("Internal.Scripts.Playlists.{0}_Playlists.sqlite");
+         CreateAssemblyScriptContainer("Internal.Scripts.Playlists.{0}.sqlite");
       }
 
       #region CRUD
