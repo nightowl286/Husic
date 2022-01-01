@@ -10,21 +10,21 @@ using Internals = Husic.DataAccess.Internal.Models;
 using System.Linq;
 using Husic.Standard.DataAccess;
 using System.Xml.Linq;
+using Husic.Standard.DataAccess.Scripts;
+using Husic.DataAccess.Scripts;
 
 namespace Husic.DataAccess
 {
    public class DataAccess : IDataAccess
    {
       #region Private
-      private static readonly Assembly _ContainingAssembly;
-      private static readonly string _ContainingAssemblyName;
+      private static readonly IScriptContainer _Scripts;
       #endregion
       static DataAccess()
       {
          SqliteDataAccess.ConnectionString = $"Data Source='data.db'";
 
-         _ContainingAssembly = Assembly.GetAssembly(typeof(DataAccess));
-         _ContainingAssemblyName = _ContainingAssembly.GetName().Name;
+         _Scripts = new AssemblyScriptContainer(Assembly.GetExecutingAssembly(), "Internal.Scripts.{0}.sqlite");
       }
 
       #region Methods
@@ -40,20 +40,20 @@ namespace Husic.DataAccess
 
          Task.WaitAll(tasks);
       }
-      public string Load(string scriptName) => LoadSql(scriptName);
+      public string Load(string scriptName) => GetScript(scriptName);
       #endregion
 
       #region Functions
       private static async Task<int> GetTableVersion(string table)
       {
-         string sql = LoadSql("Tables.GetTableVersion");
+         string sql = GetScript("Tables.GetTableVersion");
          dynamic param = new { Name = table };
          IEnumerable<int> results = await SqliteDataAccess.Query<int, dynamic>(sql, param);
          return results.FirstOrDefault();
       }
       private static Task SetTableVersion(string table, int version)
       {
-         string sql = LoadSql("Tables.SetTableVersion");
+         string sql = GetScript("Tables.SetTableVersion");
          dynamic param = new { Name = table, Version = version };
          return SqliteDataAccess.Execute(sql, param);
       }
@@ -68,11 +68,11 @@ namespace Husic.DataAccess
                return;
 
             await SetTableVersion(tableName, minVersion);
-            sql = LoadSql($"Tables.Update.UpdateTable_{tableName}"); // might be possible to use LoadInternal
+            sql = GetScript($"Tables.Update.UpdateTable_{tableName}"); // might be possible to use LoadInternal
          }
          else
          {
-            sql = LoadSql($"Tables.Create.CreateTable_{tableName}");
+            sql = GetScript($"Tables.Create.CreateTable_{tableName}");
             await SetTableVersion(tableName, minVersion);
          }
 
@@ -85,16 +85,16 @@ namespace Husic.DataAccess
          {
             if (!update)
                return;
-            sql = LoadSql($"Tables.Update.UpdateTable_{tableName}");
+            sql = GetScript($"Tables.Update.UpdateTable_{tableName}");
          }
          else
-            sql = LoadSql($"Tables.Create.CreateTable_{tableName}");
+            sql = GetScript($"Tables.Create.CreateTable_{tableName}");
 
          await SqliteDataAccess.Execute(sql);
       }
       private static async Task<bool> Exists(string name, string type = "table")
       {
-         string sql = LoadSql("Exists");
+         string sql = GetScript("Exists");
 
          dynamic param = new { Name = name, Type = type };
 
@@ -104,15 +104,7 @@ namespace Husic.DataAccess
          return name.Equals(result, StringComparison.OrdinalIgnoreCase);
 
       }
-      public static string LoadSql(string name)
-      {
-         string fullName = GetName(name);
-         return SqliteDataAccess.LoadSql(fullName, _ContainingAssembly);
-      }
-      private static string GetName(string name)
-      {
-         return _ContainingAssemblyName+ ".Internal.Scripts." + name + ".sqlite";
-      }
+      public static string GetScript(string name) => _Scripts.GetScript(name);
       #endregion
    }
 }

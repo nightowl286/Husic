@@ -30,7 +30,7 @@ namespace Husic.DataAccess.Cache
       {
          if (_Invalid)
          {
-            value = default;
+            value = default!; // okay to be null
             return false;
          }
          else
@@ -46,7 +46,7 @@ namespace Husic.DataAccess.Cache
       }
       public override void Invalidate()
       {
-         _Value = default;
+         _Value = default!; // okay to be null
          _Invalid = true;
       }
       #endregion

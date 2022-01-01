@@ -9,8 +9,8 @@ namespace Husic.DataAccess.Models
    {
       #region Properties
       public int Id { get; private set; }
-      public Uri Source { get; set; }
-      public string Name { get; set; }
+      public Uri? Source { get; set; }
+      public string Name { get; set; } = string.Empty;
       public TimeSpan Duration { get; set; }
       #endregion
       public SongModel(int id)

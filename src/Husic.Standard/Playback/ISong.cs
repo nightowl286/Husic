@@ -8,7 +8,7 @@ namespace Husic.Standard.Playback
    {
       #region Properties
       int Id { get; }
-      Uri Source { get; set; }
+      Uri? Source { get; set; }
       string Name { get; set; }
       TimeSpan Duration { get; set; }
       #endregion

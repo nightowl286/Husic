@@ -2,6 +2,7 @@
 using Husic.Standard.DataAccess.Repositories;
 using Husic.Standard.DataAccess;
 using Husic.Standard.Playback;
+using Husic.DataAccess.Cache;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,65 +11,55 @@ using System.Threading.Tasks;
 
 namespace Husic.DataAccess.Repositories
 {
-   public class PlaylistRepository : IPlaylistRepository
+   public class PlaylistRepository : KeyBasedRepository<int, IPlaylist>, IPlaylistRepository
    {
-      #region Consts
-      private const int PAGE_SIZE = 30;
-      #endregion
-
       #region Private
-      private readonly DataCache<int, IPlaylist> _Cache = new DataCache<int, IPlaylist>();
-      private readonly IDataAccess _DataAccess;
+      private readonly Cache.DataCache<int, IPlaylist> _Cache = new Cache.DataCache<int, IPlaylist>();
       #endregion
-      public PlaylistRepository(IDataAccess dataAccess)
+      public PlaylistRepository() : base()
       {
-         _DataAccess = dataAccess;
+         CreateAssemblyScriptContainer("Internal.Scripts.Playlists.{0}_Playlists.sqlite");
       }
 
       #region CRUD
-      public async Task<IPlaylist> CreatePlaylist(IPlaylist data)
+      protected override async Task<IPlaylist> Create(IPlaylist data, string script)
       {
-         string sql = Load("Create");
          dynamic param = new
          {
-            Name = data.Name,
+            data.Name,
          };
 
-         int playlistId = await SqliteDataAccess.QueryFirst<int, dynamic>(sql, param);
+         int playlistId = await SqliteDataAccess.QueryFirst<int, dynamic>(script, param);
 
          // Maybe change this, unsure which approach is better, but this
          // seems to reduce duplicate code for determining which columns
          // will be received
-         IPlaylist playlist = await GetPlaylist(playlistId);
+         IPlaylist playlist = await Get(playlistId);
 
-         _Cache.Add(playlistId, playlist);
+         _Cache.AddWeak(playlistId, playlist);
 
          return playlist;
       }
-      public async Task<IPlaylist> GetPlaylist(int id)
+      protected override async Task<IPlaylist> Get(int id, string script)
       {
          if (_Cache.TryGet(id, out IPlaylist cachedPlaylist))
             return cachedPlaylist;
 
-         string sql = Load("Get");
-         dynamic param = new { Id = id };
-
-         PlaylistModel playlist = await SqliteDataAccess.QueryFirst<PlaylistModel, dynamic>(sql, param);
+         PlaylistModel playlist = await GetFirst<PlaylistModel>(id, script);
 
          IPlaylist converted = Convert(playlist);
 
          return converted;
       }
-      public async Task<IPlaylist> UpdatePlaylist(int id, IPlaylist data)
+      protected override async Task<IPlaylist> Update(int id, IPlaylist data, string script)
       {
-         string sql = Load("Update");
          dynamic param = new
          {
             Id = id,
-            Name = data.Name,
+            data.Name,
          };
 
-         await SqliteDataAccess.Execute(sql, param);
+         await SqliteDataAccess.Execute(script, param);
          if (_Cache.TryGet(id, out IPlaylist cachedData))
          {
             cachedData.Name = data.Name;
@@ -76,26 +67,23 @@ namespace Husic.DataAccess.Repositories
          }
          else
          {
-            IPlaylist updatedPlaylist = await GetPlaylist(id);
-            _Cache.Add(updatedPlaylist.Id, updatedPlaylist);
+            IPlaylist updatedPlaylist = await Get(id);
+            _Cache.AddWeak(updatedPlaylist.Id, updatedPlaylist);
             return updatedPlaylist;
          }
       }
-      public Task DeletePlaylist(int id)
+      protected override Task Delete(int id, string script)
       {
-         string sql = Load("Delete");
-         dynamic param = new { Id = id };
-
          _Cache.Delete(id);
 
-         return SqliteDataAccess.Execute(sql, param);
+         return base.Delete(id, script);
       }
       #endregion
 
       #region Methods
       public async Task<IEnumerable<IPlaylist>> GetPlaylists(uint page, string sortBy = "Id", bool ascending = true)
       {
-         string sql = Load("Query");
+         string sql = GetScript("Query");
 
          if (!IsValidPlaylistColumn(sortBy))
             throw new ArgumentException("Invalid column name specified for the sort.", nameof(sortBy));
@@ -104,8 +92,8 @@ namespace Husic.DataAccess.Repositories
 
          dynamic param = new
          {
-            Offset = page * PAGE_SIZE,
-            Page = PAGE_SIZE,
+            Offset = page * PageSize,
+            Page = PageSize,
          };
 
          IEnumerable<PlaylistModel> playlists = await SqliteDataAccess.Query<PlaylistModel, dynamic>(sql, param);
@@ -114,7 +102,7 @@ namespace Husic.DataAccess.Repositories
       }
       public async Task<IEnumerable<IPlaylist>> SearchPlaylists(string query, uint page, string sortBy = "Id", bool ascending = true)
       {
-         string sql = Load("Search");
+         string sql = GetScript("Search");
 
          if (!IsValidPlaylistColumn(sortBy))
             throw new ArgumentException("Invalid column name specified for the sort.", nameof(sortBy));
@@ -124,8 +112,8 @@ namespace Husic.DataAccess.Repositories
          dynamic param = new
          {
             Query = query,
-            Offset = page * PAGE_SIZE,
-            Page = PAGE_SIZE,
+            Offset = page * PageSize,
+            Page = PageSize,
          };
 
          IEnumerable<PlaylistModel> playlists = await SqliteDataAccess.Query<PlaylistModel, dynamic>(sql, param);
@@ -157,7 +145,7 @@ namespace Husic.DataAccess.Repositories
             Count = model.Count
          };
 
-         _Cache.Add(playlist.Id, playlist);
+         _Cache.AddWeak(playlist.Id, playlist);
          return playlist;
       }
       private static bool IsValidPlaylistColumn(string column)
@@ -175,7 +163,6 @@ namespace Husic.DataAccess.Repositories
                return false;
          }
       }
-      private string Load(string action) => _DataAccess.Load($"Playlists.{action}_Playlists");
       #endregion
    }
 }

@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace Husic.Standard.DataAccess.Repositories
 {
-   public interface IPlaylistRepository
+   public interface IPlaylistRepository : IKeyBasedRepository<int, IPlaylist>
    {
-      #region Basic CRUD
-      Task<IPlaylist> CreatePlaylist(IPlaylist data);
-      Task<IPlaylist> GetPlaylist(int id);
-      Task<IPlaylist> UpdatePlaylist(int id, IPlaylist data);
-      Task DeletePlaylist(int id);
-      #endregion
 
       #region Methods
       Task<IEnumerable<IPlaylist>> GetPlaylists(uint page, string sortBy = "Id", bool ascending = true);

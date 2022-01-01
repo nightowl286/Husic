@@ -166,7 +166,13 @@ namespace Husic.DataAccess.Repositories
       #endregion
 
       #region Helpers
-      private static string GetPath(Uri source) => System.Web.HttpUtility.UrlDecode(source.LocalPath);
+      private static string GetPath(Uri? source)
+      {
+         if (source == null)
+            throw new ArgumentNullException("Can't get the path of a null uri.", nameof(source));
+
+         return System.Web.HttpUtility.UrlDecode(source.LocalPath);
+      }
       private static bool IsValidSongColumn(string column)
       {
          // Definitely need to find a better way of doing this
