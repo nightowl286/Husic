@@ -1,12 +1,10 @@
-﻿using Husic.DataAccess.Internal.Models;
+﻿using Husic.DataAccess.Cache;
+using Husic.DataAccess.Internal.Models;
 using Husic.Standard.DataAccess.Repositories;
-using Husic.Standard.DataAccess;
 using Husic.Standard.Playback;
-using Husic.DataAccess.Cache;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Husic.DataAccess.Repositories
@@ -14,7 +12,7 @@ namespace Husic.DataAccess.Repositories
    public class PlaylistRepository : KeyBasedRepository<int, IPlaylist>, IPlaylistRepository
    {
       #region Private
-      private readonly Cache.DataCache<int, IPlaylist> _Cache = new Cache.DataCache<int, IPlaylist>();
+      private readonly DataCache<int, IPlaylist> _Cache = new DataCache<int, IPlaylist>();
       #endregion
       public PlaylistRepository() : base()
       {

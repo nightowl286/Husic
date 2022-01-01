@@ -15,7 +15,7 @@ namespace Husic.DataAccess.Repositories
    public class SongRepository : KeyBasedRepository<int, ISong>, ISongRepository
    {
       #region Private
-      private readonly Cache.DataCache<int, ISong> _Cache = new Cache.DataCache<int, ISong>();
+      private readonly DataCache<int, ISong> _Cache = new DataCache<int, ISong>();
       #endregion
       public SongRepository() : base()
       {

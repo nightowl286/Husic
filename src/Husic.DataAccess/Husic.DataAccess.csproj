@@ -12,39 +12,39 @@
     <None Remove="Internal\Scripts\CreateTable_Versions.sqlite" />
     <None Remove="Internal\Scripts\Exists.sqlite" />
     <None Remove="Internal\Scripts\GetTableVersion.sqlite" />
-    <None Remove="Internal\Scripts\Playlists\Create_Playlists.sqlite" />
-    <None Remove="Internal\Scripts\Playlists\Delete_Playlists.sqlite" />
-    <None Remove="Internal\Scripts\Playlists\Get_Playlists.sqlite" />
-    <None Remove="Internal\Scripts\Playlists\Query_Playlists.sqlite" />
-    <None Remove="Internal\Scripts\Playlists\Search_Playlists.sqlite" />
-    <None Remove="Internal\Scripts\Playlists\UpdateCount_Playlists.sqlite" />
-    <None Remove="Internal\Scripts\Playlists\Update_Playlists.sqlite" />
+    <None Remove="Internal\Scripts\Playlists\Create.sqlite" />
+    <None Remove="Internal\Scripts\Playlists\Delete.sqlite" />
+    <None Remove="Internal\Scripts\Playlists\Get.sqlite" />
+    <None Remove="Internal\Scripts\Playlists\Query.sqlite" />
+    <None Remove="Internal\Scripts\Playlists\Search.sqlite" />
+    <None Remove="Internal\Scripts\Playlists\Update.sqlite" />
+    <None Remove="Internal\Scripts\Playlists\UpdateCount.sqlite" />
     <None Remove="Internal\Scripts\QueryTable_Songs.sqlite" />
     <None Remove="Internal\Scripts\SetTableVersion.sqlite" />
-    <None Remove="Internal\Scripts\Songs\Create_Songs.sqlite" />
-    <None Remove="Internal\Scripts\Songs\Delete_Songs.sqlite" />
-    <None Remove="Internal\Scripts\Songs\Get_Songs.sqlite" />
-    <None Remove="Internal\Scripts\Songs\Search_Songs.sqlite" />
-    <None Remove="Internal\Scripts\Songs\UpdateDuration_Songs.sqlite" />
-    <None Remove="Internal\Scripts\Songs\Update_Songs.sqlite" />
+    <None Remove="Internal\Scripts\Songs\Create.sqlite" />
+    <None Remove="Internal\Scripts\Songs\Delete.sqlite" />
+    <None Remove="Internal\Scripts\Songs\Get.sqlite" />
+    <None Remove="Internal\Scripts\Songs\Search.sqlite" />
+    <None Remove="Internal\Scripts\Songs\Update.sqlite" />
+    <None Remove="Internal\Scripts\Songs\UpdateDuration.sqlite" />
     <None Remove="Internal\Scripts\Tables\Create\CreateTable_Playlists.sqlite" />
     <None Remove="Internal\Scripts\Tables\Create\CreateTable_Playlist_Entries.sqlite" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Internal\Scripts\Playlists\Create_Playlists.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\Playlists\Delete_Playlists.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\Playlists\Get_Playlists.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\Playlists\Query_Playlists.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\Playlists\Search_Playlists.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\Playlists\UpdateCount_Playlists.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\Playlists\Update_Playlists.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\Songs\UpdateDuration_Songs.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\Songs\Update_Songs.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\Songs\Delete_Songs.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\Songs\Get_Songs.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\Songs\Create_Songs.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\Songs\Search_Songs.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Playlists\Create.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Playlists\Delete.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Playlists\Get.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Playlists\Query.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Playlists\Search.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Playlists\UpdateCount.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Playlists\Update.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Songs\UpdateDuration.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Songs\Update.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Songs\Delete.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Songs\Get.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Songs\Create.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Songs\Search.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Tables\Create\CreateTable_Playlist_Entries.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Tables\Create\CreateTable_Playlists.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Tables\Create\CreateTable_Songs.sqlite" />
@@ -52,7 +52,7 @@
     <EmbeddedResource Include="Internal\Scripts\Tables\SetTableVersion.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Tables\GetTableVersion.sqlite" />
     <EmbeddedResource Include="Internal\Scripts\Exists.sqlite" />
-    <EmbeddedResource Include="Internal\Scripts\Songs\Query_Songs.sqlite" />
+    <EmbeddedResource Include="Internal\Scripts\Songs\Query.sqlite" />
   </ItemGroup>
 
   <ItemGroup>
